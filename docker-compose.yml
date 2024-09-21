@@ -1,6 +1,7 @@
-version: '3'
-
 services:
+    node:
+        build: ./app 
+
     nginx:
         image: nginx:1.25.4
         ports:
@@ -20,11 +21,11 @@ services:
             - "8090:80"
             - "8125:8125/udp"
             - "8126:8126"
-
+            
     grafana:
         image: grafana/grafana:10.1.9
         ports:
-            - "80:3000"
+            - "3001:3000"
         volumes:
             - "grafana_config:/var/lib/grafana"
 
