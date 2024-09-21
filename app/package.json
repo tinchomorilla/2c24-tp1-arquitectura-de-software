@@ -1,0 +1,26 @@
+{
+  "name": "2c24-tp-1",
+  "version": "1.0.0",
+  "description": "> **La fecha de entrega para el informe y el código es el jueves 03/10** :bangbang:",
+  "type":"module",
+  "main": "statsd.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tinchomorilla/2c24-tp1-arquitectura-del-software.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tinchomorilla/2c24-tp1-arquitectura-del-software/issues"
+  },
+  "homepage": "https://github.com/tinchomorilla/2c24-tp1-arquitectura-del-software#readme",
+  "dependencies": {
+    "axios":"^1.7.7",
+    "nanoid":"^5.0.7",
+    "express": "^4.21.0"
+  }
+}
