@@ -14,6 +14,12 @@ app.get('/', async (req, res) => {
     res.status(200).send('ping');
 });
 
+// Endpoint de healthcheck
+app.get('/ping', async (req, res) => {
+    res.status(200).send('pong');
+});
+
+// Endpoint de noticias de vuelos espaciales
 app.get("/spaceflight_news", async (req, res) => {
     const response = await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
     let titles = [];
