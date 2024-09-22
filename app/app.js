@@ -19,6 +19,28 @@ app.get('/ping', async (req, res) => {
     res.status(200).send('pong');
 });
 
+// Endpoint de diccionario
+app.get('/dictionary', async (req, res) => {
+    const word = req.query.word;
+    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+
+    // Una palabra puede tener varias definiciones
+    // Juntamos todas las foneticas en un array, y todas las definiciones en otro
+    let phonetics = [];
+    let meanings = [];
+    if (response.status === 200) {
+        response.data.forEach(e => {
+            phonetics.push(...e.phonetics);
+            meanings.push(...e.meanings)
+        });
+
+        res.status(200).send({ phonetics, meanings });
+    } else {
+        res.status(response.status).send(response.statusText);
+    }
+    
+});
+
 // Endpoint de noticias de vuelos espaciales
 app.get("/spaceflight_news", async (req, res) => {
     const response = await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
