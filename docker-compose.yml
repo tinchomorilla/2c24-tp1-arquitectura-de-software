@@ -1,6 +1,7 @@
 services:
     node:
-        build: ./app 
+        container_name: tp1-node-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
+        build: ./app
 
     nginx:
         image: nginx:1.25.4
@@ -21,7 +22,7 @@ services:
             - "8090:80"
             - "8125:8125/udp"
             - "8126:8126"
-            
+
     grafana:
         image: grafana/grafana:10.1.9
         ports:
