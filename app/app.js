@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-import { nanoid } from 'nanoid';  
+import { nanoid } from 'nanoid';
 
 const app = express();
 const id = nanoid();
@@ -22,23 +22,26 @@ app.get('/ping', async (req, res) => {
 // Endpoint de diccionario
 app.get('/dictionary', async (req, res) => {
     const word = req.query.word;
-    const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+    try {
+        //si no es un 200 axios tira una excepcion
+        const response = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
 
-    // Una palabra puede tener varias definiciones
-    // Juntamos todas las foneticas en un array, y todas las definiciones en otro
-    let phonetics = [];
-    let meanings = [];
-    if (response.status === 200) {
+        // Una palabra puede tener varias definiciones
+        // Juntamos todas las foneticas en un array, y todas las definiciones en otro
+        let phonetics = [];
+        let meanings = [];
+
         response.data.forEach(e => {
             phonetics.push(...e.phonetics);
-            meanings.push(...e.meanings)
+            meanings.push(...e.meanings);
         });
 
         res.status(200).send({ phonetics, meanings });
-    } else {
-        res.status(response.status).send(response.statusText);
+    } catch (error) {
+        let respuesta = { error: "Error al obtener la palabra del diccionario." };
+        console.log(respuesta, error.message);
+        res.status(500).json(respuesta);
     }
-    
 });
 
 // Endpoint de noticias de vuelos espaciales
@@ -60,4 +63,36 @@ app.get("/spaceflight_news", async (req, res) => {
 
 });
 
-app.listen(3000);
+
+// Endpoint de noticias de vuelos espaciales
+app.get("/quote", async (req, res) => {
+    try {
+
+        const response = await axios.get('https://api.quotable.io/quotes/random?limit=3');
+        let content = [];
+        let author = [];
+
+
+        response.data.results.forEach(e => {
+            if (e.hasOwnProperty('author')) {
+                author.push(e.author);
+            }
+            if (e.hasOwnProperty('content')) {
+                content.push(e.content);
+            }
+        });
+
+        res.status(200).send({ content, author });
+
+
+    } catch (error) {
+        let respuesta = { error: error.message };
+        console.log(error.message);
+        res.status(500).json(respuesta);
+    }
+});
+
+
+
+
+app.listen(6000);
