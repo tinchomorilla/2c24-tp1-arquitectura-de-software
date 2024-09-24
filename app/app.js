@@ -95,4 +95,4 @@ app.get("/quote", async (req, res) => {
 
 
 
-app.listen(6000);
+app.listen(3000);
