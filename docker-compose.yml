@@ -45,13 +45,12 @@ services:
             - "/var/run:/var/run:rw"
             - "/sys:/sys:ro"
             - "/var/lib/docker/:/var/lib/docker:ro"
-
-    artillery:
-        build: ./perf
-        depends_on:
-            - nginx
-            - graphite
-        command: npm run node
+    # artillery:
+    #     build: ./perf
+    #     depends_on:
+    #         - nginx
+    #         - graphite
+    #     command: npm run node
 
 volumes:
     grafana_config:
