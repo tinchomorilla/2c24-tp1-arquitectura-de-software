@@ -1,11 +1,23 @@
 services:
-    node:
-        container_name: tp1-node-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
+    node1:
+        container_name: tp1-node1-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
         build: ./app
         dns:
             - 8.8.8.8
             - 8.8.4.4
-
+    node2:
+        container_name: tp1-node2-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
+        build: ./app
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+    node3:
+        container_name: tp1-node3-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
+        build: ./app
+        dns:
+            - 8.8.8.8
+            - 8.8.4.4
+            
     nginx:
         image: nginx:1.25.4
         ports:
@@ -14,7 +26,9 @@ services:
             - ./nginx_reverse_proxy.conf:/etc/nginx/conf.d/default.conf:ro
             - ./store/static/files:/static:ro
         links:
-            - node
+            - node1
+            - node2
+            - node3
 
     graphite:
         image: graphiteapp/graphite-statsd:1.1.10-5
