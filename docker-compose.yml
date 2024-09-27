@@ -5,19 +5,27 @@ services:
         dns:
             - 8.8.8.8
             - 8.8.4.4
+        links:
+            - redis
     node2:
         container_name: tp1-node2-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
         build: ./app
         dns:
             - 8.8.8.8
             - 8.8.4.4
+        links:
+            - redis
     node3:
         container_name: tp1-node3-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
         build: ./app
         dns:
             - 8.8.8.8
             - 8.8.4.4
-            
+        links:
+            - redis
+    redis:
+        image: redis:7
+
     nginx:
         image: nginx:1.25.4
         ports:
