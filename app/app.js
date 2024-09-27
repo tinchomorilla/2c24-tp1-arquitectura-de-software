@@ -1,9 +1,16 @@
 import express from 'express';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
+import { createClient } from 'redis';
 
 const app = express();
 const id = nanoid();
+const redisClient = createClient({ url: 'redis://redis:6379' });
+
+(async () => {
+    await redisClient.connect();
+})();
+
 
 app.use((req, res, next) => {
     res.setHeader('X-API-ID', id);
@@ -46,20 +53,29 @@ app.get('/dictionary', async (req, res) => {
 
 // Endpoint de noticias de vuelos espaciales
 app.get("/spaceflight_news", async (req, res) => {
-    const response = await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
     let titles = [];
 
-    if (response.status === 200) {
-        response.data.results.forEach(e => {
-            if (e.hasOwnProperty('title')) {
-                titles.push(e.title);
-            }
-        });
+    const titlesString = await redisClient.get('spaceflight_news');
 
-        res.status(200).send(titles);
+    if (titlesString) {
+        titles = JSON.parse(titlesString);
     } else {
-        res.status(response.status).send(response.statusText);
+        const response = await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
+        if (response.status === 200) {
+            response.data.results.forEach(e => {
+                if (e.hasOwnProperty('title')) {
+                    titles.push(e.title);
+                }
+            });
+            await redisClient.set('spaceflight_news', JSON.stringify(titles), {
+                EX: 60,
+            });
+        } else {
+            res.status(response.status).send(response.statusText);
+        }
     }
+    
+    res.status(200).send(titles);
 
 });
 
