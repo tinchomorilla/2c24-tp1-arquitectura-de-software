@@ -17,7 +17,7 @@ config:
       rampTo: 8
     - name: Plain
       duration: 30
-      arrivalRate: 2
+      arrivalRate: 8
     - name: Ramp down
       duration: 30
       arrivalRate: 8
@@ -28,9 +28,7 @@ config:
     
 
 scenarios:
-  # - name: Space News (/spaceflight_news)
-  - name: Ping (/ping)
+  - name: Space News (/spaceflight_news)
     flow:
       - get:
-          url: '/ping'
-          # url: '/spaceflight_news'
+          url: '/spaceflight_news'
