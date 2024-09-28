@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import { nanoid } from 'nanoid';
+import { rateLimit } from 'express-rate-limit'
 
 const app = express();
 const id = nanoid();
@@ -9,6 +10,18 @@ app.use((req, res, next) => {
     res.setHeader('X-API-ID', id);
     next();
 });
+
+
+const limiter = rateLimit({
+	windowMs: 45 * 1000, // 15 minutes
+	limit: 200, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+	// store: ... , // Redis, Memcached, etc. See below.
+})
+
+// Apply the rate limiting middleware to all requests.
+app.use(limiter)
 
 app.get('/', async (req, res) => {
     res.status(200).send('ping');
