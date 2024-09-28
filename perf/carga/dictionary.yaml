@@ -26,9 +26,13 @@ config:
       duration: 30
       arrivalRate: 1
     
+  payload:
+    path: "../palabras.csv"
+    fields:
+      - "words"  
 
 scenarios:
   - name: Dictionary (/dictionary)
     flow:
       - get:
-          url: '/dictionary'
+          url: '/dictionary?word={{words}}'
