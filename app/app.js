@@ -64,35 +64,5 @@ app.get("/spaceflight_news", async (req, res) => {
 });
 
 
-// Endpoint de noticias de vuelos espaciales
-app.get("/quote", async (req, res) => {
-    try {
-
-        const response = await axios.get('https://api.quotable.io/quotes/random?limit=3');
-        let content = [];
-        let author = [];
-
-
-        response.data.results.forEach(e => {
-            if (e.hasOwnProperty('author')) {
-                author.push(e.author);
-            }
-            if (e.hasOwnProperty('content')) {
-                content.push(e.content);
-            }
-        });
-
-        res.status(200).send({ content, author });
-
-
-    } catch (error) {
-        let respuesta = { error: error.message };
-        console.log(error.message);
-        res.status(500).json(respuesta);
-    }
-});
-
-
-
 
 app.listen(3000);
