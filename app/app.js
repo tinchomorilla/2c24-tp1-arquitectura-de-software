@@ -25,13 +25,14 @@ app.get('/facts', async (req, res) => {
             const response = await measureTime('external_api_time', async () => {
                 return await axios.get('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en');
             })
-            const data = response.data; 
+            const data = response.data;
             const factText = data.text;
             res.status(200).send(factText);
         } catch (error) {
             let respuesta = { error: "Error al obtener el texto en uselessfacts" };
+            let status = error.response ? error.response.status : 500;
             console.log(respuesta, error.message);
-            res.status(500).json(respuesta);
+            res.status(status).json(respuesta);
         }
     })
 });
@@ -67,22 +68,23 @@ app.get('/dictionary', async (req, res) => {
             res.status(200).send({ phonetics, meanings });
         } catch (error) {
             let respuesta = { error: "Error al obtener la palabra del diccionario." };
+            let status = error.response ? error.response.status : 500;
             console.log(respuesta, error.message);
-            res.status(500).json(respuesta);
-        }   
+            res.status(status).json(respuesta);
+        }
     })
 });
 
 // Endpoint de noticias de vuelos espaciales
 app.get("/spaceflight_news", async (req, res) => {
     measureTime('complete_time', async () => {
-        const response = await measureTime('external_api_time', async () => {
-            return await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
-        })
+        try {
+            const response = await measureTime('external_api_time', async () => {
+                return await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
+            })
 
-        let titles = [];
+            let titles = [];
 
-        if (response.status === 200) {
             response.data.results.forEach(e => {
                 if (e.hasOwnProperty('title')) {
                     titles.push(e.title);
@@ -90,8 +92,11 @@ app.get("/spaceflight_news", async (req, res) => {
             });
 
             res.status(200).send(titles);
-        } else {
-            res.status(response.status).send(response.statusText);
+        } catch (error) {
+            let respuesta = { error: "Error al obtener la palabra del diccionario." };
+            let status = error.response ? error.response.status : 500;
+            console.log(respuesta, error.message);
+            res.status(status).json(respuesta);
         }
     })
 });
