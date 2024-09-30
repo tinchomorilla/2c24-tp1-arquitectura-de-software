@@ -35,7 +35,7 @@ app.get('/facts', async (req, res) => {
             const response = await measureTime('external_api_time', async () => {
                 return await axios.get('https://uselessfacts.jsph.pl/api/v2/facts/random?language=en');
             })
-            const data = response.data; 
+            const data = response.data;
             const factText = data.text;
             res.status(200).send(factText);
         } catch (error) {
@@ -55,81 +55,91 @@ app.get('/ping', async (req, res) => {
 // Endpoint de diccionario
 app.get('/dictionary', async (req, res) => {
     measureTime('complete_time', async () => {
-    const word = req.query.word;
-    let response = [];
-    try {
-        
-        // clave es la palabra
-        const responseString = await redisClient.get(word);
+        const word = req.query.word;
+        let response = [];
+        try {
 
-        if (responseString) {
-            console.log("ENTRO AL IF");
-            response = JSON.parse(responseString);
+            // clave es la palabra
+            const responseString = await redisClient.get(word);
+
+            if (responseString) {
+
+                response = JSON.parse(responseString);
+            }
+            else {
+
+
+                // console.log("ENTRO AL IF");
+                const response_api = await measureTime('external_api_time', async () => {
+                    return await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+                })
+
+                // Una palabra puede tener varias definiciones
+                // Juntamos todas las foneticas en un array, y todas las definiciones en otro
+                let phonetics = [];
+                let meanings = [];
+
+                response_api.data.forEach(e => {
+                    phonetics.push(...e.phonetics);
+                    meanings.push(...e.meanings);
+                });
+
+                response = { phonetics, meanings };
+
+                await redisClient.set(word, JSON.stringify(response), {
+                    EX: 60,
+                });
+
+            }
+
+            res.status(200).send(response);
+        } catch (error) {
+            let respuesta = { error: "Error al obtener la palabra del diccionario." };
+            console.log(respuesta, error.message);
+            res.status(500).json(respuesta);
         }
-        else{
-            console.log("ENTRO AL ELSE");
-            
-            // console.log("ENTRO AL IF");
-            const response_api = await measureTime('external_api_time', async () => {
-                return await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-            })
-
-            // Una palabra puede tener varias definiciones
-            // Juntamos todas las foneticas en un array, y todas las definiciones en otro
-            let phonetics = [];
-            let meanings = [];
-
-            response_api.data.forEach(e => {
-                phonetics.push(...e.phonetics);
-                meanings.push(...e.meanings);
-            });
-
-            response = {phonetics, meanings};
-
-            await redisClient.set(word, JSON.stringify(response), {
-                EX: 60,
-            });
-
-        }    
-
-        res.status(200).send(response);
-    } catch (error) {
-        let respuesta = { error: "Error al obtener la palabra del diccionario." };
-        console.log(respuesta, error.message);
-        res.status(500).json(respuesta);
-    }
     })
 });
 
 // Endpoint de noticias de vuelos espaciales
 app.get("/spaceflight_news", async (req, res) => {
     measureTime('complete_time', async () => {
-    let titles = [];
+        try {
+            let titles = [];
 
-    const titlesString = await redisClient.get('spaceflight_news');
+            const titlesString = await redisClient.get('spaceflight_news');
 
-    if (titlesString) {
-        titles = JSON.parse(titlesString);
-    } else {
-        const response = await measureTime('external_api_time', async () => {
-            return await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
-        })
+            if (titlesString) {
+                titles = JSON.parse(titlesString);
+            } else {
+                const data = await measureTime('external_api_time', async () => {
+                    const aux = await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
 
-        if (response.status === 200) {
-            response.data.results.forEach(e => {
-                if (e.hasOwnProperty('title')) {
-                    titles.push(e.title);
-                }
-            });
-            await redisClient.set('spaceflight_news', JSON.stringify(titles), {
-                EX: 60,
-            });
-        } else {
-            res.status(response.status).send(response.statusText);
+                    // Verificar el código de estado HTTP
+                    if (aux.status < 200 || aux.status >= 300) {
+                        throw new HttpError("No se pudieron obtener las ultimas noticias", aux.status);
+                    }
+
+                    return aux.data;
+                })
+
+                data.results.forEach(e => {
+                    if (e.hasOwnProperty('title')) {
+                        titles.push(e.title);
+                    }
+                });
+                await redisClient.set('spaceflight_news', JSON.stringify(titles), {
+                    EX: 60,
+                });
+            }
+            res.status(200).send(titles);
+        } catch (error) {
+            let status = error.response ? error.response.status : 500;
+            let mensaje = error.message || "Error al obtener las noticias de vuelos espaciales.";
+            console.error(mensaje);
+            res.status(status).json({ error: mensaje });
         }
-    }
-    
-    res.status(200).send(titles);
+
     })
 
 });
