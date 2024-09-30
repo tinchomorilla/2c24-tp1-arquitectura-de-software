@@ -79,24 +79,31 @@ app.get('/dictionary', async (req, res) => {
 app.get("/spaceflight_news", async (req, res) => {
     measureTime('complete_time', async () => {
         try {
-            const response = await measureTime('external_api_time', async () => {
-                return await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
+            const data = await measureTime('external_api_time', async () => {
+                const aux = await axios.get('https://api.spaceflightnewsapi.net/v4/articles/?limit=5');
+
+                // Verificar el código de estado HTTP
+                if (aux.status < 200 || aux.status >= 300) {
+                    throw new HttpError("No se pudieron obtener las ultimas noticias", aux.status);
+                }
+
+                return aux.data;
             })
 
             let titles = [];
 
-            response.data.results.forEach(e => {
+            data.results.forEach(e => {
                 if (e.hasOwnProperty('title')) {
                     titles.push(e.title);
                 }
             });
 
-            res.status(200).send(titles);
+            res.status(200).json(titles);
         } catch (error) {
-            let respuesta = { error: "Error al obtener la palabra del diccionario." };
             let status = error.response ? error.response.status : 500;
-            console.log(respuesta, error.message);
-            res.status(status).json(respuesta);
+            let mensaje = error.message || "Error al obtener las noticias de vuelos espaciales.";
+            console.error(mensaje);
+            res.status(status).json({ error: mensaje });
         }
     })
 });
