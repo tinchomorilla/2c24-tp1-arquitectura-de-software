@@ -1,6 +1,5 @@
 services:
     node:
-        container_name: tp1-node-api # Cambiar el nombre para que funcione con el nginx en cualquier PC
         build: ./app
         dns:
             - 8.8.8.8

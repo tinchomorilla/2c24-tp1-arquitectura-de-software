@@ -821,8 +821,8 @@
             {
                 "current": {
                     "selected": false,
-                    "text": "1c24-tp-1_node_1",
-                    "value": "1c24-tp-1_node_1"
+                    "text": "2c24-tp1-arquitectura-de-software-node-1",
+                    "value": "2c24-tp1-arquitectura-de-software-node-1"
                 },
                 "hide": 0,
                 "includeAll": false,
@@ -831,41 +831,41 @@
                 "options": [
                     {
                         "selected": true,
-                        "text": "1c24-tp-1_node_1",
-                        "value": "1c24-tp-1_node_1"
+                        "text": "2c24-tp1-arquitectura-de-software-node-1",
+                        "value": "2c24-tp1-arquitectura-de-software-node-1"
                     },
                     {
                         "selected": false,
-                        "text": "1c24-tp-1_node_2",
-                        "value": "1c24-tp-1_node_2"
+                        "text": "2c24-tp1-arquitectura-de-software-node-2",
+                        "value": "2c24-tp1-arquitectura-de-software-node-2"
                     },
                     {
                         "selected": false,
-                        "text": "1c24-tp-1_node_3",
-                        "value": "1c24-tp-1_node_3"
+                        "text": "2c24-tp1-arquitectura-de-software-node-3",
+                        "value": "2c24-tp1-arquitectura-de-software-node-3"
                     },
                     {
                         "selected": false,
-                        "text": "1c24-tp-1_cadvisor_1",
-                        "value": "1c24-tp-1_cadvisor_1"
+                        "text": "2c24-tp1-arquitectura-de-software-cadvisor-1",
+                        "value": "2c24-tp1-arquitectura-de-software-cadvisor-1"
                     },
                     {
                         "selected": false,
-                        "text": "1c24-tp-1_grafana_1",
-                        "value": "1c24-tp-1_grafana_1"
+                        "text": "2c24-tp1-arquitectura-de-software-grafana-1",
+                        "value": "2c24-tp1-arquitectura-de-software-grafana-1"
                     },
                     {
                         "selected": false,
-                        "text": "1c24-tp-1_graphite_1",
-                        "value": "1c24-tp-1_graphite_1"
+                        "text": "2c24-tp1-arquitectura-de-software-graphite-1",
+                        "value": "2c24-tp1-arquitectura-de-software-graphite-1"
                     },
                     {
                         "selected": false,
-                        "text": "1c24-tp-1_nginx_1",
-                        "value": "1c24-tp-1_nginx_1"
+                        "text": "2c24-tp1-arquitectura-de-software-nginx-1",
+                        "value": "2c24-tp1-arquitectura-de-software-nginx-1"
                     }
                 ],
-                "query": "1c24-tp-1_node_1, 1c24-tp-1_node_2, 1c24-tp-1_node_3, 1c24-tp-1_cadvisor_1, 1c24-tp-1_grafana_1, 1c24-tp-1_graphite_1,  1c24-tp-1_nginx_1, 1c24-tp-1_bbox_1",
+                "query": "2c24-tp1-arquitectura-de-software-node-1, 2c24-tp1-arquitectura-de-software-node-2, 2c24-tp1-arquitectura-de-software-node-3, 2c24-tp1-arquitectura-de-software-cadvisor-1, 2c24-tp1-arquitectura-de-software-grafana-1, 2c24-tp1-arquitectura-de-software-graphite-1, 2c24-tp1-arquitectura-de-software-nginx-1, 2c24-tp1-arquitectura-de-software-bbox-1",
                 "queryValue": "",
                 "skipUrlSync": false,
                 "type": "custom"
