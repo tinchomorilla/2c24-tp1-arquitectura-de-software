@@ -27,7 +27,7 @@ config:
       arrivalRate: 1
     
   payload:
-    path: "../palabras.csv"
+    path: "../datasets/palabras.csv"
     fields:
       - "words"  
 
